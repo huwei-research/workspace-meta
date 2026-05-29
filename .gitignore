@@ -1,0 +1,19 @@
+# Ignore all project repos (they are independent git repos)
+Research/
+Publish/
+Public/
+Experimental/
+Personal/
+
+# Cursor cache (not config)
+.cursor/pdf_pages/
+.cursor/pdf_pages_hires/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
