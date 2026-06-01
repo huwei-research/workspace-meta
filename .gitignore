@@ -4,6 +4,8 @@ Publish/
 Public/
 Experimental/
 Personal/
+_holding/
+.codex_tmp/
 
 # Cursor cache (not config)
 .cursor/pdf_pages/
