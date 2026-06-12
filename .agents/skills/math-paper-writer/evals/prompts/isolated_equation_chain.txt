@@ -1,0 +1,1 @@
+Audit the proof fragment. Focus on logical relation between equations.

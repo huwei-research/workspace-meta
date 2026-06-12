@@ -11,6 +11,8 @@ workspace. The workspace structure is stored in the `workspace-meta` repository.
 2026Projects/              <- workspace-meta git repo (this repo)
 +-- .cursor/rules/         <- Cursor AI rules (auto-applied)
 +-- .cursor/skills/        <- Cursor skills (including this file)
++-- .agents/skills/        <- Project-local agent skills
++-- AGENTS.md              <- Workspace agent instructions
 +-- CONVENTIONS.md         <- Workspace-wide coding conventions
 +-- SYNC_GUIDE.md          <- Human-readable setup guide
 +-- setup.ps1              <- One-click setup script

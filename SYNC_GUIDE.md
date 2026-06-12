@@ -110,6 +110,9 @@ done
 See `CONVENTIONS.md` at the workspace root for all naming, structure, and style rules.
 See `.cursor/rules/project-conventions.mdc` for the Cursor AI rule summary.
 See `.cursor/skills/project-sync/SKILL.md` for the detailed sync skill.
+See `AGENTS.md` and `.agents/skills/math-paper-writer/SKILL.md` for the project-local
+mathematical paper writing skill. These files are part of the `workspace-meta` repository
+and sync with the workspace root.
 
 ## Repository Inventory
 

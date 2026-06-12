@@ -1,0 +1,7 @@
+interface:
+  display_name: "Math Paper Writer"
+  short_description: "Rigorous mathematical-paper drafting, revision, proof audit, notation review, experiment reporting, and final proofreading."
+  default_prompt: "Use this skill to write, revise, or audit a mathematical paper."
+
+policy:
+  allow_implicit_invocation: true

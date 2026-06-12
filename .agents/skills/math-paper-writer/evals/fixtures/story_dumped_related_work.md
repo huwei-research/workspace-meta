@@ -1,0 +1,1 @@
+We study algorithms for black-box optimization. Many papers have considered this problem [1,2,3,4,5,6,7]. Trust-region methods are popular. Direct search methods are also popular. Stochastic methods have been studied. In this paper we propose a new method and prove convergence.
