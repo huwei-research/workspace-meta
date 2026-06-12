@@ -161,6 +161,25 @@ DisGRem/
 
 ---
 
+### 2.4 Agent Instructions
+
+Every independent repository must have a project-local `AGENTS.md`.
+
+The file must specify:
+
+- project identity and current research status;
+- key manuscript, code, experiment, result, and counterpart-repository paths;
+- project-specific mathematical assumptions, notation, and claim boundaries;
+- the narrowest useful verification commands;
+- which result directories are paper-grade, archival, or scratch;
+- git boundaries for the repository.
+
+For new projects, start from `.agents/templates/project_agents_template.md` in the
+workspace-meta repository and specialize it before the first substantive code,
+paper, or experiment commit.
+
+---
+
 ## 3. File Naming Conventions
 
 ### 3.1 Python Files

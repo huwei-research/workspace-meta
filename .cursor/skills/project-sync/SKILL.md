@@ -69,7 +69,10 @@ Temporary bypass: `git -c http.proxy= -c https.proxy= pull`
 3. Add entry to `SYNC_GUIDE.md` inventory table
 4. Update this skill's inventory below
 5. Clone locally: `git clone ... {Category}/{RepoName}`
-6. Commit changes to `workspace-meta` repo and push
+6. Create `{Category}/{RepoName}/AGENTS.md` from
+   `.agents/templates/project_agents_template.md` and specialize it
+7. Commit the project-local `AGENTS.md` in the child repository
+8. Commit workspace inventory/setup changes to `workspace-meta` and push
 
 ## Inventory (as of 2026-05)
 

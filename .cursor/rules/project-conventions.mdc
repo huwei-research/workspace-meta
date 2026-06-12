@@ -20,7 +20,10 @@ GitHub Organization: `huwei-research`. Repo name = local folder name.
 
 ## Project Structure
 
-Research/Experimental projects must have: `README.md`, `paper/`, `codes/`.
+Research/Experimental projects must have: `README.md`, `AGENTS.md`, `paper/`, `codes/`.
+Every independent repository must have a project-local `AGENTS.md`; start new
+projects from `.agents/templates/project_agents_template.md` in the
+workspace-meta repository.
 Inside `codes/`: `core/`, `solvers/`, `problems/`, `experiments/`, `tests/`, `utils/`, `scripts/`, `results/`, `plans/`.
 
 ## Naming Rules

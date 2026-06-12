@@ -113,6 +113,9 @@ See `.cursor/skills/project-sync/SKILL.md` for the detailed sync skill.
 See `AGENTS.md` and `.agents/skills/math-paper-writer/SKILL.md` for the project-local
 mathematical paper writing skill. These files are part of the `workspace-meta` repository
 and sync with the workspace root.
+Every independent child repository should also contain its own `AGENTS.md`.
+For new projects, start from `.agents/templates/project_agents_template.md` and
+specialize the project identity, key paths, verification commands, and result policy.
 
 ## Repository Inventory
 
