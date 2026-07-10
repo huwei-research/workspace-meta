@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Orchestrator"
+  short_description: "Route and govern the complete research lifecycle"
+  default_prompt: "Use $research-orchestrator to govern this research task with full-corpus coverage."
