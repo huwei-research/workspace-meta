@@ -40,8 +40,7 @@
       "localBranch": "master",
       "remoteBranch": "master",
       "visibility": "private",
-      "syncEnabled": false,
-      "blocker": "Remote repository has not been created."
+      "syncEnabled": true
     },
     {
       "category": "Research",
@@ -52,8 +51,7 @@
       "localBranch": "codex/frost-scaffold",
       "remoteBranch": "codex/frost-scaffold",
       "visibility": "private",
-      "syncEnabled": false,
-      "blocker": "Remote repository has not been created."
+      "syncEnabled": true
     },
     {
       "category": "Research",
@@ -119,8 +117,7 @@
       "localBranch": "codex/amortized-minimax-revision",
       "remoteBranch": "codex/amortized-minimax-revision",
       "visibility": "private",
-      "syncEnabled": false,
-      "blocker": "Remote repository has not been created."
+      "syncEnabled": true
     },
     {
       "category": "Publish",
@@ -198,8 +195,7 @@
       "localBranch": "master",
       "remoteBranch": "master",
       "visibility": "public",
-      "syncEnabled": false,
-      "blocker": "Remote repository has not been created."
+      "syncEnabled": true
     },
     {
       "category": "Public",

@@ -94,17 +94,18 @@ Add `-DeepNaming` to scan tracked and manageable untracked path sets for case
 collisions and non-canonical paper-figure names. Use `-RepoFilter 'Research/*'`
 to audit one category at a time.
 
-## Current pending synchronization blockers
+## Current synchronization status
 
-The manifest deliberately blocks these entries until their external state is
-authorized and created:
+As of 2026-07-13, all 23 managed Git worktrees have an enabled remote mapping.
+The repositories created during the full-workspace synchronization pass are:
 
-| Path | Required action | Intended visibility |
+| Path | Default remote branch | Visibility |
 |---|---|---|
-| `Research/FoRN` | create `huwei-research/FoRN`, publish `master` | private |
-| `Research/FROST` | create `huwei-research/FROST`, publish `codex/frost-scaffold` | private |
-| `Research/SQZO` | create `huwei-research/SQZO`, publish active revision branch | private |
-| `Public/MathResearchHarness` | create repository and first commit | public |
+| `Research/FoRN` | `master` | private |
+| `Research/FROST` | `codex/frost-scaffold` | private |
+| `Research/SQZO` | `codex/amortized-minimax-revision` | private |
+| `Public/MathResearchHarness` | `master` | public |
+
 Do not point `Research/MATRO` at `origin/master`: that branch is the distinct
 release-facing history used by `Public/MATRO`.
 
