@@ -81,6 +81,9 @@ The sync script never stages or commits files. Pull and push skip repositories
 that are dirty, on the wrong branch, pointed at the wrong remote, missing their
 declared remote branch, or not fast-forwardable.
 
+Use `-RepoFilter 'Research/*'` or an exact path such as
+`-RepoFilter 'Research/MATRO'` for a targeted setup or synchronization pass.
+
 For a deeper read-only metadata and naming audit:
 
 ```powershell

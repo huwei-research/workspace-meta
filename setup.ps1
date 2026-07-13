@@ -16,6 +16,7 @@
 [CmdletBinding()]
 param(
     [string]$Manifest = "",
+    [string[]]$RepoFilter = @(),
     [switch]$IncludePending,
     [switch]$SkipVenv,
     [switch]$SkipLfs,
@@ -37,6 +38,13 @@ $inventory = Get-Content -Raw -LiteralPath $Manifest | ConvertFrom-Json
 if ($inventory.schemaVersion -ne 1) {
     throw "Unsupported workspace manifest schema: $($inventory.schemaVersion)"
 }
+$repositories = @($inventory.repositories)
+if ($RepoFilter.Count -gt 0) {
+    $repositories = @($repositories | Where-Object {
+        $candidate = $_.path
+        @($RepoFilter | Where-Object { $candidate -like $_ }).Count -gt 0
+    })
+}
 
 Write-Host "=== Workspace Setup ===" -ForegroundColor Cyan
 Write-Host "Root: $root"
@@ -46,7 +54,7 @@ $failures = 0
 $cloned = 0
 $skipped = 0
 
-foreach ($repo in $inventory.repositories) {
+foreach ($repo in $repositories) {
     $relativePath = $repo.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
     $repoDir = Join-Path $root $relativePath
     $parentDir = Split-Path -Parent $repoDir
@@ -130,7 +138,7 @@ if (-not $SkipPrivateSkills) {
 if (-not $SkipVenv) {
     Write-Host ""
     Write-Host "=== Python Environments ===" -ForegroundColor Cyan
-    foreach ($repo in $inventory.repositories | Where-Object { $_.syncEnabled -or $IncludePending }) {
+    foreach ($repo in $repositories | Where-Object { $_.syncEnabled -or $IncludePending }) {
         $relativePath = $repo.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
         $codesDir = Join-Path (Join-Path $root $relativePath) "codes"
         $requirements = Join-Path $codesDir "requirements.txt"

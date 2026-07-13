@@ -18,6 +18,7 @@ param(
     [ValidateSet("Status", "Fetch", "Pull", "Push")]
     [string]$Action = "Status",
     [string]$Manifest = "",
+    [string[]]$RepoFilter = @(),
     [switch]$IncludePending,
     [switch]$UseConfiguredProxy
 )
@@ -79,6 +80,13 @@ $entries = @(
         blocker = ""
     }
 ) + @($inventory.repositories)
+
+if ($RepoFilter.Count -gt 0) {
+    $entries = @($entries | Where-Object {
+        $candidate = $_.path
+        @($RepoFilter | Where-Object { $candidate -like $_ }).Count -gt 0
+    })
+}
 
 $failures = 0
 $warnings = 0
