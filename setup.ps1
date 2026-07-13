@@ -118,7 +118,19 @@ foreach ($repo in $repositories) {
         continue
     }
 
-    git -C $repoDir reset --hard "origin/$($repo.remoteBranch)"
+    $resetArguments = @()
+    if ($SkipLfs) {
+        # Keep pointer files in the worktree during lightweight clone tests or
+        # metadata-only setups. Disabling both filter entry points prevents a
+        # checkout from downloading LFS objects before the explicit pull step.
+        $resetArguments += @(
+            "-c", "filter.lfs.process=",
+            "-c", "filter.lfs.smudge=",
+            "-c", "filter.lfs.required=false"
+        )
+    }
+    $resetArguments += @("-C", $repoDir, "reset", "--hard", "origin/$($repo.remoteBranch)")
+    git @resetArguments
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[FAIL] reset $($repo.localBranch) to origin/$($repo.remoteBranch)" -ForegroundColor Red
         $failures++
