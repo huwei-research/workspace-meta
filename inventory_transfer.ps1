@@ -34,6 +34,7 @@ try {
         $rgArguments += @("-g", "!**/.git/**")
     }
     $rgArguments += @("-g", "!Research/MemOTRO/codes/.pytest_cache/**")
+    $rgArguments += @("-g", "!Personal/TransferManifests/**")
     $savedErrorAction = $ErrorActionPreference
     $ErrorActionPreference = "SilentlyContinue"
     try {
@@ -47,6 +48,22 @@ try {
 } finally {
     Pop-Location
 }
+
+$outputRelative = $output.Substring($root.Length + 1)
+$inventoryOutputNames = @(
+    "all-files.txt",
+    "all-directories.txt",
+    "codex-user-skills.csv",
+    "ignored-files-by-repository.csv",
+    "inventory-summary.json",
+    "manual-copy-roots.csv",
+    "manual-data-files.csv"
+)
+$filePaths = @(
+    $filePaths + @($inventoryOutputNames | ForEach-Object {
+        Join-Path $outputRelative $_
+    }) | Sort-Object -Unique
+)
 
 $utf8NoBom = New-Object Text.UTF8Encoding($false)
 [IO.File]::WriteAllLines((Join-Path $output "all-files.txt"), $filePaths, $utf8NoBom)

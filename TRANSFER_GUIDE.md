@@ -59,6 +59,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ./export_workspace.ps1 `
 Both modes retain Git metadata. `Portable` may need dependency and LFS restores
 before experiments run.
 
+The read-only size probe on 2026-07-14 reported approximately 38.21 GB for
+`Exact` and 31.82 GB for `Portable`, plus about 108.4 MB for the user-skill
+snapshot. Allow at least 50 GB of free space; a 64 GB or larger encrypted drive
+is recommended.
+
 ## Verify the drive copy
 
 ```powershell
