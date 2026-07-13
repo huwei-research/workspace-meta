@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "workspace": {
+    "path": ".",
+    "owner": "huwei-research",
+    "repo": "workspace-meta",
+    "remote": "https://github.com/huwei-research/workspace-meta.git",
+    "localBranch": "master",
+    "remoteBranch": "master"
+  },
+  "repositories": [
+    {
+      "category": "Research",
+      "path": "Research/BARN",
+      "owner": "huwei-research",
+      "repo": "BARN",
+      "remote": "https://github.com/huwei-research/BARN.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/BUPTR",
+      "owner": "huwei-research",
+      "repo": "BUPTR",
+      "remote": "https://github.com/huwei-research/BUPTR.git",
+      "localBranch": "master",
+      "remoteBranch": "research/master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/FoRN",
+      "owner": "huwei-research",
+      "repo": "FoRN",
+      "remote": "https://github.com/huwei-research/FoRN.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": false,
+      "blocker": "Remote repository has not been created."
+    },
+    {
+      "category": "Research",
+      "path": "Research/FROST",
+      "owner": "huwei-research",
+      "repo": "FROST",
+      "remote": "https://github.com/huwei-research/FROST.git",
+      "localBranch": "codex/frost-scaffold",
+      "remoteBranch": "codex/frost-scaffold",
+      "visibility": "private",
+      "syncEnabled": false,
+      "blocker": "Remote repository has not been created."
+    },
+    {
+      "category": "Research",
+      "path": "Research/MATRO",
+      "owner": "huwei-research",
+      "repo": "MATRO",
+      "remote": "https://github.com/huwei-research/MATRO.git",
+      "localBranch": "master",
+      "remoteBranch": "research/master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/MemOTRO",
+      "owner": "huwei-research",
+      "repo": "MemOTRO",
+      "remote": "https://github.com/huwei-research/MemOTRO.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/RITRO",
+      "owner": "huwei-research",
+      "repo": "RITRO",
+      "remote": "https://github.com/huwei-research/RITRO.git",
+      "localBranch": "codex/ritro-v7-2-final",
+      "remoteBranch": "codex/ritro-v7-2-final",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/RSSM",
+      "owner": "huwei-research",
+      "repo": "RSSM",
+      "remote": "https://github.com/huwei-research/RSSM.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/seertr",
+      "owner": "huwei-research",
+      "repo": "seertr",
+      "remote": "https://github.com/huwei-research/seertr.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
+      "path": "Research/SQZO",
+      "owner": "huwei-research",
+      "repo": "SQZO",
+      "remote": "https://github.com/huwei-research/SQZO.git",
+      "localBranch": "codex/amortized-minimax-revision",
+      "remoteBranch": "codex/amortized-minimax-revision",
+      "visibility": "private",
+      "syncEnabled": false,
+      "blocker": "Remote repository has not been created."
+    },
+    {
+      "category": "Publish",
+      "path": "Publish/ArXiv",
+      "owner": "huwei-research",
+      "repo": "ArXiv",
+      "remote": "https://github.com/huwei-research/ArXiv.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Publish",
+      "path": "Publish/BUPTR-paper",
+      "owner": "huwei-research",
+      "repo": "BUPTR-paper",
+      "remote": "https://github.com/huwei-research/BUPTR-paper.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Publish",
+      "path": "Publish/DisGRem-paper",
+      "owner": "huwei-research",
+      "repo": "DisGRem-paper",
+      "remote": "https://github.com/huwei-research/DisGRem-paper.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Publish",
+      "path": "Publish/MATRO-paper",
+      "owner": "huwei-research",
+      "repo": "MATRO-paper",
+      "remote": "https://github.com/huwei-research/MATRO-paper.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Public",
+      "path": "Public/BUPTR",
+      "owner": "huwei-research",
+      "repo": "BUPTR",
+      "remote": "https://github.com/huwei-research/BUPTR.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true,
+      "note": "Public-release worktree; GitHub visibility remains private until publication is authorized."
+    },
+    {
+      "category": "Public",
+      "path": "Public/DisGRem",
+      "owner": "huwei-research",
+      "repo": "DisGRem",
+      "remote": "https://github.com/huwei-research/DisGRem.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "public",
+      "syncEnabled": true
+    },
+    {
+      "category": "Public",
+      "path": "Public/MathResearchHarness",
+      "owner": "huwei-research",
+      "repo": "MathResearchHarness",
+      "remote": "https://github.com/huwei-research/MathResearchHarness.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "public",
+      "syncEnabled": false,
+      "blocker": "Remote repository has not been created."
+    },
+    {
+      "category": "Public",
+      "path": "Public/MATRO",
+      "owner": "huwei-research",
+      "repo": "MATRO",
+      "remote": "https://github.com/huwei-research/MATRO.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true,
+      "note": "Public-release worktree; GitHub visibility remains private until publication is authorized."
+    },
+    {
+      "category": "Experimental",
+      "path": "Experimental/QuasiNewton",
+      "owner": "huwei-research",
+      "repo": "QuasiNewton",
+      "remote": "https://github.com/huwei-research/QuasiNewton.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Experimental",
+      "path": "Experimental/SelfCorrecting",
+      "owner": "huwei-research",
+      "repo": "SelfCorrecting",
+      "remote": "https://github.com/huwei-research/SelfCorrecting.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Personal",
+      "path": "Personal/Weihu-resume",
+      "owner": "huwei-research",
+      "repo": "Weihu-resume",
+      "remote": "https://github.com/huwei-research/Weihu-resume.git",
+      "localBranch": "master",
+      "remoteBranch": "master",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Infrastructure",
+      "path": "LiteratureLibrary/research-lit-harness",
+      "owner": "huwei0121",
+      "repo": "research-lit-harness",
+      "remote": "https://github.com/huwei0121/research-lit-harness.git",
+      "localBranch": "main",
+      "remoteBranch": "main",
+      "visibility": "private",
+      "syncEnabled": true
+    }
+  ],
+  "excludedLocalDependencies": [
+    {
+      "path": "Experimental/lean-libraries",
+      "reason": "Third-party Lean checkouts and .lake packages; restore from lake-manifest.json instead of workspace sync."
+    },
+    {
+      "path": "Personal/AIContext",
+      "reason": "Local-only personal context; intentionally outside Git synchronization."
+    }
+  ]
+}

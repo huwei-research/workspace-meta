@@ -1,1 +1,13 @@
 * text=auto eol=lf
+
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.zip  binary
+*.7z   binary
+*.xlsx binary
+*.xls  binary
+
+*.ps1 text eol=lf

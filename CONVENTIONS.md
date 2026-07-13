@@ -25,41 +25,59 @@ into five categories using GitHub Topics:
 
 ```
 2026Projects/
+├── README.md
 ├── CONVENTIONS.md
+├── workspace-repos.json
+├── setup.ps1
+├── sync_all.ps1
 ├── .cursor/
 │   └── rules/project-conventions.mdc
 ├── Research/
-│   ├── BUPTR/
-│   ├── MATRO/
-│   ├── STARTRO/
-│   ├── RITRO/
-│   ├── MemOTRO/
 │   ├── BARN/
-│   └── RSSM/
+│   ├── BUPTR/
+│   ├── FoRN/
+│   ├── FROST/
+│   ├── MATRO/
+│   ├── MemOTRO/
+│   ├── RITRO/
+│   ├── RSSM/
+│   ├── seertr/
+│   └── SQZO/
 ├── Publish/
+│   ├── ArXiv/
+│   ├── BUPTR-paper/
 │   ├── DisGRem-paper/
-│   └── ArXiv/
+│   └── MATRO-paper/
 ├── Public/
-│   └── DisGRem/
+│   ├── BUPTR/
+│   ├── DisGRem/
+│   ├── MathResearchHarness/
+│   └── MATRO/
 ├── Experimental/
 │   ├── QuasiNewton/
 │   └── SelfCorrecting/
-└── Personal/
-    └── Weihu-resume/
+├── Personal/
+│   └── Weihu-resume/
+└── LiteratureLibrary/
+    └── research-lit-harness/
 ```
 
 Each subfolder is an independent Git repository. The category directories (`Research/`, etc.)
-are NOT Git repositories themselves.
+are NOT Git repositories themselves. `workspace-repos.json` is the canonical clone, remote,
+branch, visibility, and synchronization inventory. Third-party Lean checkouts below
+`Experimental/lean-libraries/` and local-only personal context are intentionally excluded.
 
 ### 1.3 Repository Naming
 
 | Rule | Example |
 |------|---------|
-| Research projects: uppercase acronym | `BUPTR`, `MATRO`, `STARTRO` |
+| Research projects: uppercase acronym | `BUPTR`, `MATRO`, `SQZO` |
 | Compound names: PascalCase | `MemOTRO`, `SelfCorrecting`, `QuasiNewton` |
+| Canonical lowercase exception | `seertr` (method name in prose: `SEER-TR`) |
 | Paper-only repos: `{Project}-paper` | `DisGRem-paper` |
 | ArXiv bundle: `ArXiv` | `ArXiv` |
 | Repo name = local folder name = GitHub name | Always consistent across all three |
+| Split research/release histories | Same remote, distinct branches declared in `workspace-repos.json` |
 | No `-private` suffix | Visibility controlled by GitHub settings |
 
 ### 1.4 Repository Description Format
@@ -609,54 +627,30 @@ Every project README follows this structure:
 
 ### 12.1 Clone All Repositories
 
-```bash
-ORG=huwei-research
-mkdir -p Research Publish Public Experimental Personal
-
-# Research
-for repo in BUPTR MATRO STARTRO RITRO MemOTRO BARN RSSM; do
-  git clone https://github.com/$ORG/$repo.git Research/$repo
-done
-
-# Publish
-git clone https://github.com/$ORG/DisGRem-paper.git Publish/DisGRem-paper
-git clone https://github.com/$ORG/ArXiv.git Publish/ArXiv
-
-# Public
-git clone https://github.com/$ORG/DisGRem.git Public/DisGRem
-
-# Experimental
-for repo in QuasiNewton SelfCorrecting; do
-  git clone https://github.com/$ORG/$repo.git Experimental/$repo
-done
-
-# Personal
-git clone https://github.com/$ORG/Weihu-resume.git Personal/Weihu-resume
+```powershell
+git clone https://github.com/huwei-research/workspace-meta.git 2026Projects
+Set-Location 2026Projects
+powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1 -SkipVenv
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Status
 ```
+
+Do not maintain a second hand-written repository list. Update `workspace-repos.json`; both
+setup and synchronization read that manifest. This is required for repositories such as
+BUPTR and MATRO whose research and release directories use different remote branches.
 
 ### 12.2 Environment Setup
 
-```bash
-for project in Research/*/codes Publish/*/codes Public/*/codes Experimental/*/codes; do
-  if [ -f "$project/requirements.txt" ]; then
-    cd "$project"
-    python -m venv .venv
-    source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-    pip install -r requirements.txt
-    deactivate
-    cd -
-  fi
-done
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1
 ```
+
+Use `-SkipVenv` when only Git synchronization is needed. The setup script also pulls Git
+LFS objects for repositories whose `.gitattributes` declares LFS filters.
 
 ### 12.3 Figure Regeneration
 
-After clone, regenerate figures by running each project's replot script:
-
-```bash
-cd Research/BUPTR/codes && python scripts/replot_from_csv.py
-cd Public/DisGRem/codes && python scripts/replot.py
-```
+Regenerate figures only from the command documented by the target project's `AGENTS.md`,
+README, and formal result `REPORT.md`. Never use a workspace-wide guessed replot command.
 
 ### 12.4 Proxy Configuration (China)
 
@@ -667,12 +661,17 @@ git config --global https.proxy socks5h://127.0.0.1:7897
 
 ### 12.5 Daily Workflow
 
-```bash
-# Pull all repos
-for dir in Research/* Publish/* Public/* Experimental/* Personal/*; do
-  git -C "$dir" pull --ff-only 2>/dev/null
-done
+```powershell
+# Inspect local state without network changes.
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Status
 
-# After changes
-git add -A && git commit -m "Description" && git push
+# Refresh remote references, then fast-forward only clean repositories.
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Fetch
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Pull
+
+# Commit inside each independent child repository, then push committed work.
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Push
 ```
+
+`sync_all.ps1` never stages or commits files. Pull and push skip dirty repositories, remote
+mismatches, branch mismatches, missing remote branches, and non-fast-forward states.

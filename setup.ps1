@@ -1,84 +1,166 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    One-click workspace setup. Clone this repo first, then run this script.
+    Recreate the complete managed workspace from workspace-repos.json.
 .DESCRIPTION
-    Creates category directories and clones all repos from huwei-research org
-    into the correct local folder structure.
+    Clone workspace-meta first, then run this script from the workspace root.
+    Repositories that share a GitHub remote can still use distinct local and
+    remote branches. Entries with syncEnabled=false are reported and skipped
+    unless -IncludePending is supplied.
 .EXAMPLE
     git clone https://github.com/huwei-research/workspace-meta.git 2026Projects
-    cd 2026Projects
-    .\setup.ps1
+    Set-Location 2026Projects
+    ./setup.ps1 -SkipVenv
 #>
 
+[CmdletBinding()]
 param(
-    [string]$Org = "huwei-research",
-    [switch]$SkipVenv
+    [string]$Manifest = "",
+    [switch]$IncludePending,
+    [switch]$SkipVenv,
+    [switch]$SkipLfs,
+    [switch]$SkipPrivateSkills
 )
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
 $root = $PSScriptRoot
+if (-not $Manifest) {
+    $Manifest = Join-Path $root "workspace-repos.json"
+}
+if (-not (Test-Path -LiteralPath $Manifest -PathType Leaf)) {
+    throw "Workspace manifest not found: $Manifest"
+}
+
+$inventory = Get-Content -Raw -LiteralPath $Manifest | ConvertFrom-Json
+if ($inventory.schemaVersion -ne 1) {
+    throw "Unsupported workspace manifest schema: $($inventory.schemaVersion)"
+}
 
 Write-Host "=== Workspace Setup ===" -ForegroundColor Cyan
 Write-Host "Root: $root"
-Write-Host "Organization: $Org"
-Write-Host ""
+Write-Host "Manifest: $Manifest"
 
-# Category -> Repo mapping
-$repos = @{
-    "Research" = @("BUPTR", "MATRO", "STARTRO", "RITRO", "MemOTRO", "BARN", "RSSM")
-    "Publish" = @("DisGRem-paper", "ArXiv")
-    "Public" = @("DisGRem")
-    "Experimental" = @("QuasiNewton", "SelfCorrecting")
-    "Personal" = @("Weihu-resume")
-}
+$failures = 0
+$cloned = 0
+$skipped = 0
 
-# Create directories and clone
-foreach ($category in $repos.Keys) {
-    $categoryDir = Join-Path $root $category
-    if (-not (Test-Path $categoryDir)) {
-        New-Item -ItemType Directory -Path $categoryDir -Force | Out-Null
-        Write-Host "[DIR] Created $category/" -ForegroundColor Green
+foreach ($repo in $inventory.repositories) {
+    $relativePath = $repo.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
+    $repoDir = Join-Path $root $relativePath
+    $parentDir = Split-Path -Parent $repoDir
+
+    if (-not $repo.syncEnabled -and -not $IncludePending) {
+        Write-Host "[PENDING] $($repo.path): $($repo.blocker)" -ForegroundColor Yellow
+        $skipped++
+        continue
     }
 
-    foreach ($repo in $repos[$category]) {
-        $repoDir = Join-Path $categoryDir $repo
-        if (Test-Path (Join-Path $repoDir ".git")) {
-            Write-Host "[SKIP] $category/$repo (already cloned)" -ForegroundColor Yellow
+    if (Test-Path -LiteralPath (Join-Path $repoDir ".git")) {
+        $safePath = $repoDir.Replace('\', '/')
+        $actualRemote = git -c "safe.directory=$safePath" -C $repoDir remote get-url origin 2>$null
+        $actualBranch = git -c "safe.directory=$safePath" -C $repoDir branch --show-current 2>$null
+        if ($actualRemote -and ($actualRemote.TrimEnd('/') -replace '\.git$', '') -ne
+            ($repo.remote.TrimEnd('/') -replace '\.git$', '')) {
+            Write-Host "[WARN] $($repo.path): origin is $actualRemote" -ForegroundColor Yellow
+            $failures++
+        } elseif ($actualBranch -ne $repo.localBranch) {
+            Write-Host "[WARN] $($repo.path): branch $actualBranch, expected $($repo.localBranch)" -ForegroundColor Yellow
+            $failures++
         } else {
-            Write-Host "[CLONE] $category/$repo" -ForegroundColor Cyan
-            git clone "https://github.com/$Org/$repo.git" $repoDir
+            Write-Host "[OK] $($repo.path)" -ForegroundColor DarkGray
+        }
+        $skipped++
+        continue
+    }
+
+    if (Test-Path -LiteralPath $repoDir) {
+        $contents = @(Get-ChildItem -LiteralPath $repoDir -Force -ErrorAction SilentlyContinue)
+        if ($contents.Count -gt 0) {
+            Write-Host "[FAIL] $($repo.path): non-empty directory is not a Git repository" -ForegroundColor Red
+            $failures++
+            continue
+        }
+    }
+
+    New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
+    Write-Host "[CLONE] $($repo.path) <- $($repo.remote)#$($repo.remoteBranch)" -ForegroundColor Cyan
+    git clone --no-checkout $repo.remote $repoDir
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[FAIL] clone $($repo.path)" -ForegroundColor Red
+        $failures++
+        continue
+    }
+
+    git -C $repoDir checkout -b $repo.localBranch --track "origin/$($repo.remoteBranch)"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[FAIL] checkout $($repo.localBranch) from origin/$($repo.remoteBranch)" -ForegroundColor Red
+        $failures++
+        continue
+    }
+
+    if (-not $SkipLfs -and (Test-Path -LiteralPath (Join-Path $repoDir ".gitattributes"))) {
+        $attributes = Get-Content -Raw -LiteralPath (Join-Path $repoDir ".gitattributes")
+        if ($attributes -match "filter=lfs") {
+            git -C $repoDir lfs pull
             if ($LASTEXITCODE -ne 0) {
-                Write-Host "[FAIL] $category/$repo" -ForegroundColor Red
+                Write-Host "[WARN] Git LFS pull failed for $($repo.path)" -ForegroundColor Yellow
+                $failures++
             }
         }
     }
+
+    $cloned++
 }
 
-# Python environments
+if (-not $SkipPrivateSkills) {
+    $privateSkillSource = Join-Path $root "Personal/Weihu-resume/.agents/skills/weihu-resume-writer"
+    $privateSkillTarget = Join-Path $root ".agents/skills/weihu-resume-writer"
+    if (Test-Path -LiteralPath $privateSkillSource -PathType Container) {
+        New-Item -ItemType Directory -Path $privateSkillTarget -Force | Out-Null
+        Get-ChildItem -LiteralPath $privateSkillSource -Force | Copy-Item -Destination $privateSkillTarget -Recurse -Force
+        Write-Host "[SKILL] Installed private weihu-resume-writer copy" -ForegroundColor DarkGray
+    } else {
+        Write-Host "[WARN] Private resume skill source is unavailable" -ForegroundColor Yellow
+        $failures++
+    }
+}
+
 if (-not $SkipVenv) {
     Write-Host ""
-    Write-Host "=== Setting up Python environments ===" -ForegroundColor Cyan
-
-    $reqFiles = Get-ChildItem -Path $root -Recurse -Filter "requirements.txt" |
-        Where-Object { $_.DirectoryName -match "\\codes$" }
-
-    foreach ($req in $reqFiles) {
-        $codesDir = $req.DirectoryName
+    Write-Host "=== Python Environments ===" -ForegroundColor Cyan
+    foreach ($repo in $inventory.repositories | Where-Object { $_.syncEnabled -or $IncludePending }) {
+        $relativePath = $repo.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        $codesDir = Join-Path (Join-Path $root $relativePath) "codes"
+        $requirements = Join-Path $codesDir "requirements.txt"
         $venvDir = Join-Path $codesDir ".venv"
-        if (Test-Path $venvDir) {
-            Write-Host "[SKIP] $($req.Directory.Parent.Parent.Name) (venv exists)" -ForegroundColor Yellow
+        if (-not (Test-Path -LiteralPath $requirements -PathType Leaf)) { continue }
+        if (Test-Path -LiteralPath $venvDir) {
+            Write-Host "[OK] $($repo.path)/codes/.venv" -ForegroundColor DarkGray
             continue
         }
-        Write-Host "[VENV] $($req.Directory.Parent.Parent.Name)" -ForegroundColor Cyan
-        Push-Location $codesDir
-        python -m venv .venv
-        & "$venvDir\Scripts\pip" install -q -r requirements.txt
-        Pop-Location
+
+        Write-Host "[VENV] $($repo.path)" -ForegroundColor Cyan
+        python -m venv $venvDir
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[FAIL] create venv for $($repo.path)" -ForegroundColor Red
+            $failures++
+            continue
+        }
+        & (Join-Path $venvDir "Scripts/pip.exe") install -r $requirements
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "[FAIL] install requirements for $($repo.path)" -ForegroundColor Red
+            $failures++
+        }
     }
 }
 
 Write-Host ""
-Write-Host "=== Setup Complete ===" -ForegroundColor Green
-Write-Host "Open this folder in Cursor to activate workspace rules."
-Write-Host "Run .\sync_all.ps1 for daily pull."
+Write-Host "Cloned: $cloned; skipped/existing: $skipped; failures: $failures"
+if ($failures -gt 0) {
+    exit 1
+}
+
+Write-Host "Workspace setup complete." -ForegroundColor Green
+Write-Host "Run ./sync_all.ps1 -Action Status before starting work."

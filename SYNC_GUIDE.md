@@ -1,136 +1,145 @@
 # Workspace Sync Guide
 
-Complete instructions for replicating the `huwei-research` workspace on any machine.
+This guide reproduces the `2026Projects` workspace without mixing independent
+repositories or accidentally publishing local data.
+
+## Source of truth
+
+`workspace-repos.json` is the only repository inventory. It records each local
+path, remote URL, local branch, remote branch, visibility, and whether the entry
+is currently safe to synchronize.
+
+This matters because some paths intentionally share a remote:
+
+| Local path | Remote branch | Purpose |
+|---|---|---|
+| `Research/BUPTR` | `research/master` | private research and manuscript history |
+| `Public/BUPTR` | `master` | release-facing history |
+| `Research/MATRO` | `research/master` | private research history |
+| `Public/MATRO` | `master` | release-facing history |
+
+Do not replace the manifest with category wildcards or a hand-written clone
+loop. Those approaches clone the wrong branch for split-history projects and
+miss newly added repositories.
 
 ## Prerequisites
 
-| Tool | Version | Install (Windows) |
-|------|---------|-------------------|
-| Git | 2.40+ | `winget install Git.Git` |
-| Python | 3.10+ | `winget install Python.Python.3.12` |
-| GitHub CLI | 2.40+ | `winget install GitHub.cli` |
-| TeX Live | 2024+ | Manual install from tug.org |
-| Cursor | Latest | cursor.com |
-
-## Quick Start
-
-```bash
-# 1. Authenticate
-gh auth login
-gh auth setup-git
-
-# 2. Create workspace
-mkdir -p ~/2026Projects/{Research,Publish,Public,Experimental,Personal}
-cd ~/2026Projects
-
-# 3. Clone everything
-ORG=huwei-research
-
-for repo in BUPTR MATRO STARTRO RITRO MemOTRO BARN RSSM; do
-  git clone https://github.com/$ORG/$repo.git Research/$repo
-done
-
-git clone https://github.com/$ORG/DisGRem-paper.git Publish/DisGRem-paper
-git clone https://github.com/$ORG/ArXiv.git Publish/ArXiv
-git clone https://github.com/$ORG/DisGRem.git Public/DisGRem
-
-for repo in QuasiNewton SelfCorrecting; do
-  git clone https://github.com/$ORG/$repo.git Experimental/$repo
-done
-
-git clone https://github.com/$ORG/Weihu-resume.git Personal/Weihu-resume
-
-# 4. Install Python environments
-find . -path "*/codes/requirements.txt" -exec sh -c '
-  dir=$(dirname "{}"); cd "$dir" && python -m venv .venv &&
-  . .venv/bin/activate && pip install -r requirements.txt && deactivate
-' \;
-
-# 5. Regenerate figures
-cd Research/BUPTR/codes && python scripts/replot_from_csv.py && cd -
-cd Public/DisGRem/codes && python scripts/replot.py && cd -
-```
-
-## Windows PowerShell Equivalent
+- Git 2.40 or newer
+- Windows PowerShell 5.1 or PowerShell 7
+- GitHub CLI authenticated for private repositories
+- Git LFS 3.x
+- Python and TeX only when a target project's verification requires them
 
 ```powershell
-$org = "huwei-research"
-$root = "D:\Desktop\2026Projects"
-
-# Create structure
-"Research","Publish","Public","Experimental","Personal" | ForEach-Object {
-    New-Item -ItemType Directory -Force -Path "$root\$_"
-}
-
-Set-Location $root
-
-# Clone Research
-@('BUPTR','MATRO','STARTRO','RITRO','MemOTRO','BARN','RSSM') | ForEach-Object {
-    git clone "https://github.com/$org/$_.git" "Research\$_"
-}
-
-# Clone Publish
-git clone "https://github.com/$org/DisGRem-paper.git" "Publish\DisGRem-paper"
-git clone "https://github.com/$org/ArXiv.git" "Publish\ArXiv"
-
-# Clone Public
-git clone "https://github.com/$org/DisGRem.git" "Public\DisGRem"
-
-# Clone Experimental
-@('QuasiNewton','SelfCorrecting') | ForEach-Object {
-    git clone "https://github.com/$org/$_.git" "Experimental\$_"
-}
-
-# Clone Personal
-git clone "https://github.com/$org/Weihu-resume.git" "Personal\Weihu-resume"
+gh auth login
+gh auth setup-git
+git lfs install
 ```
 
-## Proxy Configuration
+## New machine
 
-For networks requiring proxy (common in China):
+```powershell
+git clone https://github.com/huwei-research/workspace-meta.git 2026Projects
+Set-Location 2026Projects
+powershell -NoProfile -ExecutionPolicy Bypass -File ./setup.ps1 -SkipVenv
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Status
+```
 
-```bash
-git config --global http.proxy  socks5h://127.0.0.1:7897
+Omit `-SkipVenv` to create environments for repositories that have
+`codes/requirements.txt`. `setup.ps1` also pulls declared Git LFS objects and
+installs the personalized resume skill from the private `Personal/Weihu-resume`
+repository into the ignored workspace skill directory. Use `-SkipPrivateSkills`
+only when that private skill must not be installed on the target machine.
+
+Entries marked `syncEnabled=false` are reported as `PENDING` and skipped. Use
+`-IncludePending` only after the remote repository or branch has deliberately
+been created.
+
+## Daily workflow
+
+Start with a local audit:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Status
+```
+
+Refresh remote references and fast-forward clean repositories:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Fetch
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Pull
+```
+
+Commit work inside each child repository. Never commit child-project changes
+from the workspace root. After repositories are clean, push existing commits:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ./sync_all.ps1 -Action Push
+```
+
+The sync script never stages or commits files. Pull and push skip repositories
+that are dirty, on the wrong branch, pointed at the wrong remote, missing their
+declared remote branch, or not fast-forwardable.
+
+For a deeper read-only metadata and naming audit:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ./audit_workspace.ps1
+```
+
+Add `-DeepNaming` to scan tracked and manageable untracked path sets for case
+collisions and non-canonical paper-figure names. Use `-RepoFilter 'Research/*'`
+to audit one category at a time.
+
+## Current pending synchronization blockers
+
+The manifest deliberately blocks these entries until their external state is
+authorized and created:
+
+| Path | Required action | Intended visibility |
+|---|---|---|
+| `Research/FoRN` | create `huwei-research/FoRN`, publish `master` | private |
+| `Research/FROST` | create `huwei-research/FROST`, publish `codex/frost-scaffold` | private |
+| `Research/SQZO` | create `huwei-research/SQZO`, publish active revision branch | private |
+| `Public/MathResearchHarness` | create repository and first commit | public |
+Do not point `Research/MATRO` at `origin/master`: that branch is the distinct
+release-facing history used by `Public/MATRO`.
+
+## Intentionally excluded local material
+
+- `Experimental/lean-libraries/`: third-party Lean checkouts and `.lake`
+  packages; restore them from the owning Lean project's manifest.
+- `Personal/AIContext/`: local-only personal context.
+- workspace-root `.tmp*`, `tmp/`, review renders, application-form exports, and
+  transfer packages: local artifacts, never `workspace-meta` content.
+- `.agents/skills/weihu-resume-writer/` at the workspace root: ignored installed
+  copy; its synchronized source belongs to the private resume repository.
+- bulk raw experiment outputs that a project marks as scratch or generated:
+  keep them local; synchronize curated data, reports, code, and regeneration
+  commands according to the project `AGENTS.md` and `REPORT.md`.
+
+## Proxy handling
+
+By default the scripts bypass configured Git HTTP proxies for each command. To
+use the global Git proxy configuration, pass `-UseConfiguredProxy` to
+`sync_all.ps1`.
+
+Example global proxy configuration:
+
+```powershell
+git config --global http.proxy socks5h://127.0.0.1:7897
 git config --global https.proxy socks5h://127.0.0.1:7897
 ```
 
-Temporary bypass: `git -c http.proxy= -c https.proxy= clone/pull/push ...`
+## Troubleshooting
 
-## Daily Workflow
-
-```bash
-# Pull all repos
-for dir in Research/* Publish/* Public/* Experimental/* Personal/*; do
-  [ -d "$dir/.git" ] && git -C "$dir" pull --ff-only
-done
-```
-
-## Conventions
-
-See `CONVENTIONS.md` at the workspace root for all naming, structure, and style rules.
-See `.cursor/rules/project-conventions.mdc` for the Cursor AI rule summary.
-See `.cursor/skills/project-sync/SKILL.md` for the detailed sync skill.
-See `AGENTS.md` and `.agents/skills/math-paper-writer/SKILL.md` for the project-local
-mathematical paper writing skill. These files are part of the `workspace-meta` repository
-and sync with the workspace root.
-Every independent child repository should also contain its own `AGENTS.md`.
-For new projects, start from `.agents/templates/project_agents_template.md` and
-specialize the project identity, key paths, verification commands, and result policy.
-
-## Repository Inventory
-
-| Category | Repo | Status | Description |
-|----------|------|--------|-------------|
-| Research | BUPTR | Active | Bayesian Uncertainty-Penalized Trust-Region for DFO |
-| Research | MATRO | Active | Matrix-Adaptive Trust-Region Optimizer |
-| Research | STARTRO | Active | Subspace Trust-Region with Adaptive Random Directions |
-| Research | RITRO | Active | Riemannian Interpolation Trust-Region Optimizer |
-| Research | MemOTRO | Active | Memory-enhanced Optimization via Trust-Region |
-| Research | BARN | Active | Boundary-Aware Regularized Newton |
-| Research | RSSM | Active | Random Subspace Second-order Methods |
-| Publish | DisGRem-paper | Submitted | DisGRem SIOPT submission + poster |
-| Publish | ArXiv | Archive | ArXiv submission packages |
-| Public | DisGRem | Published | Distributed Gradient-Regularized Newton (MIT) |
-| Experimental | QuasiNewton | Exploratory | Quasi-Newton and curvature compression |
-| Experimental | SelfCorrecting | Exploratory | Self-correcting optimization methods |
-| Personal | Weihu-resume | Maintained | Personal CV/resume |
+- `running scripts is disabled`: invoke the script with
+  `powershell -ExecutionPolicy Bypass -File ...` as shown above.
+- `dubious ownership`: the sync script supplies a scoped `safe.directory` for
+  each command. A fresh clone on another computer should not have this issue.
+- `DIRTY`: review and commit or ignore files inside that repository; the script
+  will not guess.
+- `missing-remote-branch`: verify the manifest branch mapping before creating
+  or pushing a branch.
+- Git LFS pointer text instead of file content: run `git lfs pull` in that
+  repository.

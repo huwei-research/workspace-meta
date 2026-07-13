@@ -1,11 +1,31 @@
-# Ignore all project repos (they are independent git repos)
+# Independent project repositories (managed by workspace-repos.json)
 Research/
 Publish/
 Public/
 Experimental/
 Personal/
+LiteratureLibrary/
 _holding/
+
+# Codex and local review/snapshot workspaces
 .codex_tmp/
+.tmp*/
+tmp/
+reviews/
+
+# Local export and application-form artifacts (never workspace metadata)
+HU_WEI_*.pdf
+HU_WEI_*/
+hukou_printable_output/
+coordinates_used.json
+filled_fields_review.md
+
+# Local research transfer packages that are not workspace-meta sources
+metricized_muon_p0_package/
+
+# Installed copy of a personalized skill. Its source is synchronized through
+# the private Personal/Weihu-resume repository.
+.agents/skills/weihu-resume-writer/
 
 # Cursor cache (not config)
 .cursor/pdf_pages/
