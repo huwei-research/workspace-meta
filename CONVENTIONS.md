@@ -27,9 +27,20 @@ into five categories using GitHub Topics:
 2026Projects/
 ├── README.md
 ├── CONVENTIONS.md
+├── TRANSFER_GUIDE.md
+├── SKILLS_SYNC.md
 ├── workspace-repos.json
 ├── setup.ps1
 ├── sync_all.ps1
+├── inventory_transfer.ps1
+├── export_workspace.ps1
+├── verify_transfer.ps1
+├── restore_codex_skills.ps1
+├── Archive/
+│   ├── Research/
+│   ├── WorkspaceMaintenance/
+│   ├── WorkspaceReviews/
+│   └── GeneratedArtifacts/
 ├── .cursor/
 │   └── rules/project-conventions.mdc
 ├── Research/
@@ -54,18 +65,26 @@ into five categories using GitHub Topics:
 │   ├── MathResearchHarness/
 │   └── MATRO/
 ├── Experimental/
+│   ├── MetricizedMuonP0/
 │   ├── QuasiNewton/
-│   └── SelfCorrecting/
+│   ├── SelfCorrecting/
+│   └── lean-libraries/
 ├── Personal/
+│   ├── AIContext/
+│   ├── PrivateDocuments/
+│   ├── SkillBackups/
+│   ├── TransferManifests/
 │   └── Weihu-resume/
 └── LiteratureLibrary/
     └── research-lit-harness/
 ```
 
-Each subfolder is an independent Git repository. The category directories (`Research/`, etc.)
-are NOT Git repositories themselves. `workspace-repos.json` is the canonical clone, remote,
-branch, visibility, and synchronization inventory. Third-party Lean checkouts below
-`Experimental/lean-libraries/` and local-only personal context are intentionally excluded.
+Managed project subfolders are independent Git repositories. The category directories
+(`Research/`, etc.) are NOT Git repositories themselves. `workspace-repos.json` is the
+canonical clone, remote, branch, visibility, and synchronization inventory. `Archive/`,
+`Personal/PrivateDocuments/`, `Personal/AIContext/`, `Personal/SkillBackups/`, `Personal/TransferManifests/`,
+`Experimental/MetricizedMuonP0/`, and third-party Lean checkouts are intentionally outside
+normal Git synchronization and must follow the manual-transfer policy in `TRANSFER_GUIDE.md`.
 
 ### 1.3 Repository Naming
 

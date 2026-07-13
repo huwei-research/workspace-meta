@@ -262,6 +262,26 @@
     {
       "path": "Personal/AIContext",
       "reason": "Local-only personal context; intentionally outside Git synchronization."
+    },
+    {
+      "path": "Personal/PrivateDocuments",
+      "reason": "Sensitive identity and visa materials; transfer only through a trusted encrypted channel."
+    },
+    {
+      "path": "Personal/TransferManifests",
+      "reason": "Generated local transfer inventories; may contain private path metadata."
+    },
+    {
+      "path": "Personal/SkillBackups",
+      "reason": "Dated local backups of user-installed Codex skills; transfer manually and keep private."
+    },
+    {
+      "path": "Experimental/MetricizedMuonP0",
+      "reason": "Local P0 experiment package without an authorized remote; retain through manual transfer."
+    },
+    {
+      "path": "Archive",
+      "reason": "Local historical snapshots and generated provenance artifacts; optional manual transfer."
     }
   ]
 }

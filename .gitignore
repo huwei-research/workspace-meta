@@ -5,6 +5,7 @@ Public/
 Experimental/
 Personal/
 LiteratureLibrary/
+Archive/
 _holding/
 
 # Codex and local review/snapshot workspaces
@@ -19,9 +20,6 @@ HU_WEI_*/
 hukou_printable_output/
 coordinates_used.json
 filled_fields_review.md
-
-# Local research transfer packages that are not workspace-meta sources
-metricized_muon_p0_package/
 
 # Installed copy of a personalized skill. Its source is synchronized through
 # the private Personal/Weihu-resume repository.
