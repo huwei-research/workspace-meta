@@ -108,11 +108,26 @@ foreach ($repo in $repositories) {
     }
 
     # `git clone --no-checkout` still creates a local branch for the remote's
-    # default branch. Reset that fresh branch to the manifest mapping so a
-    # local `master` can intentionally track `origin/research/master`.
-    git -C $repoDir checkout -B $repo.localBranch --track "origin/$($repo.remoteBranch)"
+    # default branch. Rename and reset that fresh branch before assigning its
+    # upstream so `master -> origin/research/master` does not emit a misleading
+    # divergence warning about the remote's default branch.
+    git -C $repoDir branch -M $repo.localBranch
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "[FAIL] checkout $($repo.localBranch) from origin/$($repo.remoteBranch)" -ForegroundColor Red
+        Write-Host "[FAIL] create local branch $($repo.localBranch)" -ForegroundColor Red
+        $failures++
+        continue
+    }
+
+    git -C $repoDir reset --hard "origin/$($repo.remoteBranch)"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[FAIL] reset $($repo.localBranch) to origin/$($repo.remoteBranch)" -ForegroundColor Red
+        $failures++
+        continue
+    }
+
+    git -C $repoDir branch "--set-upstream-to=origin/$($repo.remoteBranch)" $repo.localBranch
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[FAIL] track origin/$($repo.remoteBranch) from $($repo.localBranch)" -ForegroundColor Red
         $failures++
         continue
     }
