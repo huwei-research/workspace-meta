@@ -123,9 +123,9 @@ release-facing history used by `Public/MATRO`.
 
 ## Proxy handling
 
-By default the scripts bypass configured Git HTTP proxies for each command. To
-use the global Git proxy configuration, pass `-UseConfiguredProxy` to
-`sync_all.ps1`.
+By default the scripts bypass configured Git HTTP proxies for each network
+command. To use the global Git proxy configuration, pass `-UseConfiguredProxy`
+to `setup.ps1` or `sync_all.ps1`.
 
 Example global proxy configuration:
 

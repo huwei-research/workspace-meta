@@ -20,7 +20,8 @@ param(
     [switch]$IncludePending,
     [switch]$SkipVenv,
     [switch]$SkipLfs,
-    [switch]$SkipPrivateSkills
+    [switch]$SkipPrivateSkills,
+    [switch]$UseConfiguredProxy
 )
 
 Set-StrictMode -Version Latest
@@ -94,7 +95,12 @@ foreach ($repo in $repositories) {
 
     New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
     Write-Host "[CLONE] $($repo.path) <- $($repo.remote)#$($repo.remoteBranch)" -ForegroundColor Cyan
-    git clone --no-checkout $repo.remote $repoDir
+    $cloneArguments = @()
+    if (-not $UseConfiguredProxy) {
+        $cloneArguments += @("-c", "http.proxy=", "-c", "https.proxy=")
+    }
+    $cloneArguments += @("clone", "--no-checkout", $repo.remote, $repoDir)
+    git @cloneArguments
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[FAIL] clone $($repo.path)" -ForegroundColor Red
         $failures++
@@ -111,7 +117,12 @@ foreach ($repo in $repositories) {
     if (-not $SkipLfs -and (Test-Path -LiteralPath (Join-Path $repoDir ".gitattributes"))) {
         $attributes = Get-Content -Raw -LiteralPath (Join-Path $repoDir ".gitattributes")
         if ($attributes -match "filter=lfs") {
-            git -C $repoDir lfs pull
+            $lfsArguments = @()
+            if (-not $UseConfiguredProxy) {
+                $lfsArguments += @("-c", "http.proxy=", "-c", "https.proxy=")
+            }
+            $lfsArguments += @("-C", $repoDir, "lfs", "pull")
+            git @lfsArguments
             if ($LASTEXITCODE -ne 0) {
                 Write-Host "[WARN] Git LFS pull failed for $($repo.path)" -ForegroundColor Yellow
                 $failures++
