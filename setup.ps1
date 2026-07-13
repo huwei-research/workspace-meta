@@ -107,7 +107,10 @@ foreach ($repo in $repositories) {
         continue
     }
 
-    git -C $repoDir checkout -b $repo.localBranch --track "origin/$($repo.remoteBranch)"
+    # `git clone --no-checkout` still creates a local branch for the remote's
+    # default branch. Reset that fresh branch to the manifest mapping so a
+    # local `master` can intentionally track `origin/research/master`.
+    git -C $repoDir checkout -B $repo.localBranch --track "origin/$($repo.remoteBranch)"
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[FAIL] checkout $($repo.localBranch) from origin/$($repo.remoteBranch)" -ForegroundColor Red
         $failures++
