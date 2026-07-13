@@ -1,7 +1,7 @@
 interface:
   display_name: "Math Paper Writer"
-  short_description: "Rigorous mathematical-paper drafting, revision, proof audit, notation review, experiment reporting, and final proofreading."
-  default_prompt: "Use this skill to write, revise, or audit a mathematical paper."
+  short_description: "Cross-field math-paper drafting, proof/formal-verification audit, claim/citation review, experiments, and gate review."
+  default_prompt: "Use $math-paper-writer to write, revise, audit proofs or formal artifacts, calibrate references for, or finalize a mathematical paper."
 
 policy:
   allow_implicit_invocation: true

@@ -52,6 +52,12 @@ research thread.
 
 ## Skill Routing
 
+- Use `.agents/skills/research-orchestrator/SKILL.md` as the master entry point
+  for nontrivial literature reading/search, research-direction analysis,
+  manuscript review/writing/revision, numerical experiment design/execution,
+  result analysis, peer review, and resumable multi-stage research work. It
+  must audit the governed corpus, create full-corpus coverage, and route only
+  the next specialist skill.
 - Use `.agents/skills/math-paper-writer/SKILL.md` for mathematical paper
   drafting, theorem/proof audits, notation review, introduction and related-work
   review, numerical-experiment reporting, bibliography checks, LaTeX production

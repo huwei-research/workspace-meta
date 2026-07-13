@@ -10,7 +10,10 @@
 8. Check quantifier order and domains.
 9. Check if any symbol is used before definition.
 10. Check if the conclusion exactly matches the theorem statement.
-11. Report risks before rewriting.
-12. Only after audit, provide a safe revised proof if requested.
+11. If formal verification is relevant, assess whether the theorem is
+    formalization-ready or whether a formal artifact exactly matches the
+    manuscript statement.
+12. Report risks before rewriting.
+13. Only after audit, provide a safe revised proof if requested.
 
 Output uses `assets/proof_audit_report_template.md`.

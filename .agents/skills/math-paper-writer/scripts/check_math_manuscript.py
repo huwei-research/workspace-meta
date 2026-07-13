@@ -36,14 +36,16 @@ def check_text(text: str) -> list[Issue]:
         (r"\[(citation needed|verification needed|TODO|FIXME)\]", "unresolved-marker", "Unresolved marker remains."),
         (r"\b(don't|can't|won't|isn't|aren't|doesn't|didn't|it's)\b", "contraction", "Avoid contractions in formal writing; check its/it's."),
         (r"\bwe have that\b", "wording", "Prefer 'we have ...' over 'we have that ...'."),
-        (r"\bfor\s+\\forall\b|\bfor\s+∀\b", "quantifier", "Do not write 'for for all'."),
-        (r"\\neq\s*[^\n.;,]*\\neq|≠\s*[^\n.;,]*≠|!=\s*[^\n.;,]*!=", "nontransitive-neq", "Do not chain non-transitive inequality; state pairwise distinctness explicitly."),
+        (r"\bfor\s+\\forall\b", "quantifier", "Do not write 'for for all'."),
+        (r"(\\neq|!=)\s*[^\n.;,]*(\\neq|!=)", "nontransitive-neq", "Do not chain non-transitive inequality; state pairwise distinctness explicitly."),
         (r"\bIf\b[^.\n]{40,},[^.\n]{40,},", "long-if", "Long if-clause may obscure hypothesis and conclusion; consider adding 'then' or splitting."),
         (r"\b(any)\b", "ambiguous-any", "Check whether 'any' should be 'each', 'every', or 'some'."),
         (r"\bwhere we define\b|\bwhere .* is defined as\b", "late-where-definition", "Define important terms before use; avoid lazy 'where' definitions."),
         (r"\bThis\s+(raises|shows|implies|gives|means|suggests|proves)\b", "naked-this", "Qualify 'This' with a noun or rewrite to remove ambiguity."),
         (r"\bThere (is|are)\b|\bIt (is|can be)\b", "weak-opening", "Check whether a stronger subject-verb opening is possible."),
+        (r"\bIt can be seen\b|\bIt is easy to see\b", "weak-evidence-phrase", "Name the table, theorem, or argument that shows the claim."),
         (r"\bcompletely failed\b|\binevitably require\b|\bvery accurate\b|\bclearly efficient\b", "inflated-wording", "Replace vague or redundant intensifiers by precise evidence."),
+        (r"\b(first|novel|state-of-the-art|outperform|significantly|robust|efficient)\b", "evidence-bearing-word", "Check that this claim is supported by proof, experiment, citation, or limitation language."),
         (r"\bnot\b[^.\n]{0,60}\bwithout\b", "negative-without", "Consider rewriting a negative-without construction positively."),
         (r"\bMatlab\b", "matlab-capitalization", "Use 'MATLAB'."),
         (r"\bloose\b", "possible-confused-word", "Check whether 'lose' is intended."),
@@ -61,7 +63,7 @@ def check_text(text: str) -> list[Issue]:
         issues.append(Issue(line_number(text, m.start(2)), "bare-symbol-or-citation-start", "Avoid starting a sentence with a bare symbol or citation."))
 
     # Lines beginning with implication arrows.
-    add_regex_issues(issues, text, r"^\s*(\\Rightarrow|\\implies|⇒)", "orphan-arrow", "An implication arrow should not begin a line without a clear antecedent.", flags=re.MULTILINE)
+    add_regex_issues(issues, text, r"^\s*(\\Rightarrow|\\implies|=>)", "orphan-arrow", "An implication arrow should not begin a line without a clear antecedent.", flags=re.MULTILINE)
 
     # Big inline fractions.
     for m in re.finditer(r"\$([^$]{30,})\$", text):

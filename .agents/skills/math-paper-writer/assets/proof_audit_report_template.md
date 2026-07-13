@@ -33,4 +33,11 @@
 
 ## Hidden assumptions
 
+## Formalization readiness
+
+- Level: not assessed / informal audit only / formalization-ready / partially formalized / formally checked / statement mismatch / not ready
+- Toolchain or artifact:
+- Statement-alignment risk:
+- Trust-boundary risk:
+
 ## Suggested safe revisions

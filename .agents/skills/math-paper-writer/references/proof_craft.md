@@ -167,6 +167,25 @@ Identify the probability space, random variables, filtration if any, conditionin
 
 Do not silently turn a conditional good-event result into an unconditional theorem.
 
+## Formalization readiness
+
+When a proof is central, fragile, or claimed to be machine-checked, assess
+formalization readiness:
+
+- Can the theorem statement be translated into precise types, structures, and
+  hypotheses?
+- Are all implicit coercions, topologies, norms, domains, and side conditions
+  explicit?
+- Does the proof depend on library results that exist in the chosen proof
+  assistant?
+- Can the proof be split into reusable lemmas with clear dependencies?
+- Does any manuscript claim exceed the formal theorem?
+
+Do not call a theorem formally verified unless the exact formal statement
+compiles under a recorded toolchain with no `sorry`, `admit`, unexplained
+axioms, or statement mismatch. Use `references/formal_verification.md` for
+formal artifacts and safe wording.
+
 ## Proof polishing after audit
 
 After correctness is established:

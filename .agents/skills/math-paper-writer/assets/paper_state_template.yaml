@@ -1,0 +1,45 @@
+project: ""
+manuscript_entry: ""
+target_reader_or_venue: ""
+working_mode: "fidelity"
+last_updated: ""
+main_claim: ""
+scope: ""
+latest_gate_verdict: ""
+results:
+  - id: ""
+    label: ""
+    status: "open"
+    assumptions: ""
+    conclusion: ""
+proof_obligations:
+  - id: ""
+    location: ""
+    dependency: ""
+    status: "open"
+claim_obligations:
+  - id: ""
+    location: ""
+    evidence_route: ""
+    source_card: ""
+    evidence_needed: ""
+    status: "open"
+source_obligations:
+  - id: ""
+    role: ""
+    locator: ""
+    status: "open"
+experiment_obligations:
+  - id: ""
+    question: ""
+    data_or_code_path: ""
+    status: "open"
+risks:
+  - severity: ""
+    item: ""
+gate_reviews:
+  - date: ""
+    verdict: ""
+    blocking_or_p1_issues: ""
+next_safe_actions:
+  - ""

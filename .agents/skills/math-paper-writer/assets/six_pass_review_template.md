@@ -12,6 +12,23 @@
 
 ## Pass 6: Overall coherence
 
+## Gate Review Rubric
+
+| Dimension | Score 0-5 | Main risk |
+| --- | ---: | --- |
+| Mathematical correctness |  |  |
+| Theorem/result contract |  |  |
+| Proof traceability |  |  |
+| Claim-evidence integrity |  |  |
+| Literature and citation accuracy |  |  |
+| Notation and symbol grammar |  |  |
+| Narrative architecture |  |  |
+| Experiments and reproducibility |  |  |
+| Mathematical English and readability |  |  |
+| Production readiness |  |  |
+
+Gate verdict:
+
 ## Prioritized issues
 
 ### Blocking
