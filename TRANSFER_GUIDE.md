@@ -41,7 +41,7 @@ Copy everything, including repository metadata and rebuildable environments:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ./export_workspace.ps1 `
-  -Destination 'E:\CodexTransfer' -Mode Exact -IncludeGlobalSkills
+  -Destination 'E:\CodexTransfer' -Mode Exact
 ```
 
 One ignored pytest cache at `Research/MemOTRO/codes/.pytest_cache` has an
@@ -53,22 +53,23 @@ caches, Lean build directories, and Python caches:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ./export_workspace.ps1 `
-  -Destination 'E:\CodexTransfer' -Mode Portable -IncludeGlobalSkills
+  -Destination 'E:\CodexTransfer' -Mode Portable
 ```
 
 Both modes retain Git metadata. `Portable` may need dependency and LFS restores
 before experiments run.
 
 The read-only size probe on 2026-07-14 reported approximately 38.21 GB for
-`Exact` and 31.82 GB for `Portable`, plus about 108.4 MB for the user-skill
-snapshot. Allow at least 50 GB of free space; a 64 GB or larger encrypted drive
-is recommended.
+`Exact` and 31.82 GB for `Portable`; both already include the dated 108.4 MB
+skill snapshot under `Personal/SkillBackups/`. Add `-IncludeGlobalSkills` only
+when a second, live copy under `CodexProfile/user-skills` is useful. Allow at
+least 50 GB of free space; a 64 GB or larger encrypted drive is recommended.
 
 ## Verify the drive copy
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ./verify_transfer.ps1 `
-  -Destination 'E:\CodexTransfer' -Mode Exact -IncludeGlobalSkills
+  -Destination 'E:\CodexTransfer' -Mode Exact
 ```
 
 Use the same mode for export and verification.
@@ -83,8 +84,11 @@ Use the same mode for export and verification.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ./restore_codex_skills.ps1 `
-  -BackupPath 'E:\CodexTransfer\CodexProfile\user-skills'
+  -BackupPath 'E:\CodexTransfer\2026Projects\Personal\SkillBackups\2026-07-14\user-skills'
 ```
+
+If `-IncludeGlobalSkills` was used during export, the alternative restore path
+is `E:\CodexTransfer\CodexProfile\user-skills`.
 
 5. Reinstall plugins through Codex and sign in again where required.
 6. Rebuild omitted environments when `Portable` mode was used.
