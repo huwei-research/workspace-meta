@@ -1,11 +1,18 @@
-# Independent project repositories (managed by workspace-repos.json)
-Research/
-Publish/
-Public/
-Experimental/
-Personal/
-LiteratureLibrary/
-Archive/
+# Category instructions belong to workspace-meta; all project contents remain excluded.
+/Research/*
+!/Research/AGENTS.md
+/Publish/*
+!/Publish/AGENTS.md
+/Public/*
+!/Public/AGENTS.md
+/Experimental/*
+!/Experimental/AGENTS.md
+/Personal/*
+!/Personal/AGENTS.md
+/LiteratureLibrary/*
+!/LiteratureLibrary/AGENTS.md
+/Archive/*
+!/Archive/AGENTS.md
 _holding/
 
 # Codex and local review/snapshot workspaces

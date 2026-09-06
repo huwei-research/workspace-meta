@@ -7,6 +7,31 @@ projects stored below `Research/`, `Publish/`, `Public/`, `Experimental/`,
 The child projects are separate Git repositories. Do not run a workspace-root
 `git add -A` expecting it to commit project work.
 
+## Instruction and structure guide
+
+- [AGENTS.md](AGENTS.md) defines shared boundaries and how to read each instruction layer.
+- [CONVENTIONS.md](CONVENTIONS.md) owns directory, naming, version, evidence, and Git defaults.
+- Category instructions define the role of [Research](Research/AGENTS.md),
+  [Publish](Publish/AGENTS.md), [Public](Public/AGENTS.md),
+  [Experimental](Experimental/AGENTS.md), [Personal](Personal/AGENTS.md),
+  [LiteratureLibrary](LiteratureLibrary/AGENTS.md), and [Archive](Archive/AGENTS.md).
+- Each project's `AGENTS.md` records actual entry points, local exceptions, and checks.
+  More local instruction files add only the rules needed for their subtree.
+- New projects use the [project template](.agents/templates/project_agents_template.md);
+  specialized subtrees use the [subdirectory template](.agents/templates/subdirectory_agents_template.md).
+
+The root repository tracks category instruction files; it continues to exclude
+the projects and private local contents beneath those categories. A standalone
+project clone has its own instructions and must not depend on private sibling
+repositories for ordinary setup or tests.
+
+## Local workspace overview
+
+The local [workspace overview](Personal/WorkspaceManagement/2026-09-05/INDEX.md)
+links the research-status snapshot, the current minimal skills profile, and reversible
+desktop organization records. This directory is private and intentionally
+excluded from Git; the link is available only on this computer or a trusted copy.
+
 ## New machine
 
 ```powershell

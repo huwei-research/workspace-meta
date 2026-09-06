@@ -1,98 +1,12 @@
 ---
-description: Enforces project structure, naming, code style, cross-platform, and experiment conventions across all huwei-research repositories.
+description: Follow workspace and project instructions for the current task.
 alwaysApply: true
 ---
 
-# Project Conventions
-
-Refer to `CONVENTIONS.md` at the workspace root for the full specification.
-
-## Workspace Layout
-
-Projects are organized into category directories:
-- `Research/` — Active projects (code + paper), private
-- `Publish/` — Submitted/published papers, private
-- `Public/` — Open-source code releases
-- `Experimental/` — Exploratory projects, private
-- `Personal/` — Non-research files, private
-
-GitHub Organization: `huwei-research`. Repo name = local folder name.
-
-## Project Structure
-
-Research/Experimental projects must have: `README.md`, `AGENTS.md`, `paper/`, `codes/`.
-Every independent repository must have a project-local `AGENTS.md`; start new
-projects from `.agents/templates/project_agents_template.md` in the
-workspace-meta repository.
-Inside `codes/`: `core/`, `solvers/`, `problems/`, `experiments/`, `tests/`, `utils/`, `scripts/`, `results/`, `plans/`.
-
-## Naming Rules
-
-- Repository names: uppercase acronym (BUPTR, MATRO) or PascalCase (MemOTRO, SelfCorrecting)
-- Internal directories: `lowercase_snake_case` (e.g., `bup_newuoa/`, `dfo_tr/`)
-- Python files: `lowercase_snake_case.py`
-- Solver main: `{algorithm}.py`; versions: `{algorithm}_v{N}.py`
-- Test files: `test_{module}.py`
-- LaTeX submission: `{project}_{journal}_submission.tex`
-- LaTeX draft: `{project}_paper_v{major}_{minor}.tex`
-- Exploratory scripts: prefix with `_` (e.g., `_test_v7_quick.py`)
-- Figures: `snake_case.pdf` in `paper/figures/main/` or `paper/figures/supplementary/`
-
-## Python Style
-
-- PEP 8, line length 100, 4-space indent
-- NumPy-style docstrings on public APIs
-- Imports: stdlib / third-party / local (blank-line separated)
-- Classes: `PascalCase`; functions/variables: `snake_case`; constants: `UPPER_SNAKE_CASE`
-
-## Cross-Platform (CRITICAL)
-
-- ALWAYS use `pathlib.Path` for paths, NEVER hardcode `\` or `/`
-- sys.path setup: `_CODES_ROOT = Path(__file__).resolve().parents[N]`
-- Create dirs with `Path.mkdir(parents=True, exist_ok=True)`
-- When passing paths to libraries (matplotlib, pandas): use `str(path)`
-- Every project must have `.gitattributes` with `* text=auto eol=lf`
-
-## File Placement
-
-- New solvers go in `codes/solvers/{algorithm_name}/`
-- New experiments go in `codes/experiments/{benchmarks|ablation|analysis|research|paper}/`
-- Formal results go in `codes/results/paper/{experiment_name}/` with `REPORT.md`
-- Scratch results go in `codes/results/scratch/` (gitignored)
-- Helper scripts go in `codes/scripts/`
-- Plans and checklists go in `codes/plans/`
-
-## Git: What to Track
-
-- TRACK: `.py`, `.csv`, `.json`, `.xls`, `.xlsx`, `.md`, `.tex`, `.txt`
-- DO NOT TRACK: LaTeX artifacts, `.venv/`, `__pycache__/`, `codes/results/scratch/`
-- Exception: `paper/**/*.pdf` and `paper/**/*.png` ARE tracked
-- Figures in `codes/results/` are NOT tracked (regenerated from CSV)
-
-## Results Storage
-
-- `codes/results/paper/` — formal results for publication (tracked, REPORT.md required)
-- `codes/results/archive/` — old formal results (tracked)
-- `codes/results/scratch/` — temporary/debug runs (gitignored)
-- Timestamp format: `YYYYMMDD_HHMMSS_{experiment_name}/`
-
-## Experiment Structure
-
-- Fixed seeds: `SEEDS = [42, 123, 7, 256, 999]`
-- Default opts: `{"max_eval": 3000, "rhobeg": 1.0, "rhoend": 1e-8}`
-- Success metric: More-Wild relative error
-- Save raw data to CSV; figures generated separately and not committed
-
-## Versioning
-
-- Paper versions: `v{major}_{minor}` in filename
-- Code versions: Git tags `v{major}.{minor}.{patch}`
-- Tag at submission milestones: `v1.0.0-siopt-submission`
-
-## Cloning & Syncing
-
-- Org: `https://github.com/huwei-research/`
-- Clone into category dirs: `git clone .../BUPTR.git Research/BUPTR`
-- After clone: `cd <project>/codes && python -m venv .venv && pip install -r requirements.txt`
-- Regenerate figures: `python scripts/replot.py`
-- Daily: `git pull --ff-only` before working, `git add -A && git commit && git push` after
+Read the workspace `AGENTS.md`, category `AGENTS.md`, target project's `AGENTS.md`
+and README, and any applicable subdirectory `AGENTS.md` before editing.
+Use relevant sections of the workspace `CONVENTIONS.md` as defaults.
+Project instructions own actual paths and documented layout/version exceptions.
+This file is an instruction pointer; do not duplicate shared policy here.
+Respect the user's current skill enablement policy over obsolete mandatory skill routes.
+Keep research integrity, unrelated user work, privacy, and independent repository boundaries intact.
