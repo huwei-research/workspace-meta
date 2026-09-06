@@ -77,6 +77,17 @@
     },
     {
       "category": "Research",
+      "path": "Research/NMGeometry",
+      "owner": "huwei-research",
+      "repo": "NMGeometry",
+      "remote": "https://github.com/huwei-research/NMGeometry.git",
+      "localBranch": "codex/nmgeometry-mechanism-v7",
+      "remoteBranch": "codex/nmgeometry-mechanism-v7",
+      "visibility": "private",
+      "syncEnabled": true
+    },
+    {
+      "category": "Research",
       "path": "Research/RITRO",
       "owner": "huwei-research",
       "repo": "RITRO",
